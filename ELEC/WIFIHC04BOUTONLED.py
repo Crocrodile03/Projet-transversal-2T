@@ -1,102 +1,91 @@
 import network
 import socket
 import time
-from machine import Pin
-import utime
+from machine import Pin, time_pulse_us
 
 # --- CONFIGURATION ---
 SSID = "0001"
 PASSWORD = "00000001"
 
 led = Pin(0, Pin.OUT)
-trig = Pin(15, Pin.OUT)
-echo = Pin(14, Pin.IN)
+button = Pin(1, Pin.IN, Pin.PULL_UP)
 
-# Setup Bouton (GPIO 2 = VCC, GPIO 1 = Signal, Résistance 470)
-vcc_bouton = Pin(2, Pin.OUT)
-vcc_bouton.value(1)
-bouton = Pin(1, Pin.IN)
+# Capteur de distance HC-SR04
+trig = Pin(14, Pin.OUT)
+echo = Pin(15, Pin.IN)
 
-# Variables de stockage (Globales)
-etat_bouton = "RELACHE"
-distance_cm = 0
+def get_distance():
+    trig.low()
+    time.sleep_us(2)
+    trig.high()
+    time.sleep_us(10)
+    trig.low()
+    
+    # Mesure la durée de l'impulsion en microsecondes
+    duree = time_pulse_us(echo, 1, 30000) # Timeout de 30ms
+    if duree < 0:
+        return 0
+    # Calcul de la distance : (vitesse du son * temps) / 2
+    distance = (duree * 0.0343) / 2
+    return round(distance, 1)
 
-# --- CONNEXION WI-FI ---
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(SSID, PASSWORD)
 
-print("Connexion au Wi-Fi...")
 while not wlan.isconnected():
     time.sleep(0.5)
 
 ip = wlan.ifconfig()[0]
 print(f"Connecté ! http://{ip}")
 
-# --- SETUP SERVEUR ---
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(('', 80))
-s.listen(1) # On réduit la file d'attente pour plus de réactivité
-s.settimeout(0.05) # Timeout très court pour ne pas bloquer
-
-def mesurer_distance():
-    # Signal court pour ne pas bloquer le processeur
-    trig.low()
-    utime.sleep_us(2)
-    trig.high()
-    utime.sleep_us(10)
-    trig.low()
-    
-    # Sécurité pour éviter les boucles infinies (timeout interne)
-    start = utime.ticks_us()
-    while echo.value() == 0:
-        if utime.ticks_diff(utime.ticks_us(), start) > 20000: return 0
-        pulse_start = utime.ticks_us()
-    
-    start = utime.ticks_us()
-    while echo.value() == 1:
-        if utime.ticks_diff(utime.ticks_us(), start) > 20000: return 0
-        pulse_end = utime.ticks_us()
-        
-    return (utime.ticks_diff(pulse_end, pulse_start) * 0.0343) / 2
-
-print("Système stabilisé prêt !")
+s.listen(5)
+s.settimeout(0.1)
 
 while True:
-    # 1. MISE À JOUR DES DONNÉES (Mesure rapide)
-    try:
-        # On lit le bouton
-        if bouton.value() == 0:
-            led.value(1)
-            etat_bouton = "RELACHE"
-        else:
-            led.value(0)
-            etat_bouton = "APPUYE"
-        
-        # On lit la distance (seulement une fois par boucle)
-        distance_cm = mesurer_distance()
-    except:
-        pass
+    # Logique Bouton & LED
+    valeur_bouton = button.value()
+    if valeur_bouton == 0:
+        led.value(0) # Allumé
+        etat = "APPUYE"
+    else:
+        led.value(1) # Éteint
+        etat = "RELACHE"
 
-    # 2. RÉPONSE WEB (Si une requête arrive)
+    # Lecture Distance
+    dist = get_distance()
+
     try:
-        client, addr = s.accept()
-        # On ne lit que le début de la requête pour aller vite
-        request = client.recv(512) 
+        try:
+            client, addr = s.accept()
+        except OSError:
+            continue
+
+        request = client.recv(1024)
         
-        # On prépare la réponse
-        html = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n"
-        html += "<html><head><meta charset='utf-8'><meta http-equiv='refresh' content='3'></head>"
-        html += "<body style='font-family: sans-serif; text-align: center; margin-top: 50px;'>"
-        html += f"<h1 style='color: #333;'>Dashboard Pico W</h1>"
-        html += f"<div style='border: 2px solid #ccc; padding: 20px; display: inline-block; border-radius: 15px;'>"
-        html += f"<p>Bouton : <strong style='color: {'red' if etat_bouton == 'APPUYE' else 'green'};'>{etat_bouton}</strong></p>"
-        html += f"<p>Distance : <strong style='color: blue;'>{distance_cm:.1f} cm</strong></p>"
-        html += "</div></body></html>"
+        response = "HTTP/1.1 200 OK\r\n"
+        response += "Content-Type: text/html\r\n"
+        response += "Cache-Control: no-cache\r\n"
+        response += "Connection: close\r\n\r\n"
         
-        client.send(html)
+        html = f"""
+        <html>
+            <head><meta http-equiv='refresh' content='1'></head>
+            <body style='font-family: Arial; text-align: center;'>
+                <h1>Tableau de bord Pico W</h1>
+                <p style='font-size: 20px;'>Bouton : <strong>{etat}</strong></p>
+                <div style='background: #f0f0f0; padding: 20px; border-radius: 10px; display: inline-block;'>
+                    <h2>Distance mesuree</h2>
+                    <p style='font-size: 40px; color: blue;'>{dist} cm</p>
+                </div>
+            </body>
+        </html>
+        """
+        
+        client.send(response + html)
         client.close()
-    except OSError:
-        # Aucune connexion entrante, on continue simplement la boucle
-        pass
+    except:
+        if 'client' in locals(): client.close()
