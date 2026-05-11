@@ -1,0 +1,96 @@
+.main {
+  padding: 24px 24px 60px 24px;
+  min-height: 100vh;
+}
+
+.window {
+  background: #d4d0c8;
+  border: 2px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.titleBar {
+  background: linear-gradient(to right, #0a246a, #3a6be0);
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.titleText {
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.winButtons {
+  display: flex;
+  gap: 2px;
+}
+
+.minimize, .maximize, .close {
+  width: 21px;
+  height: 21px;
+  font-size: 11px;
+  font-family: Tahoma, sans-serif;
+  border: 1px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #e8e4dc, #c8c4bc);
+  color: #000;
+}
+
+.close {
+  background: linear-gradient(to bottom, #e05050, #b83030);
+  color: #fff;
+}
+
+.close:hover {
+  background: linear-gradient(to bottom, #ff6060, #d04040);
+}
+
+.menuBar {
+  background: #d4d0c8;
+  border-bottom: 1px solid #a0a0a0;
+  padding: 2px 6px;
+  display: flex;
+  gap: 0;
+  font-size: 11px;
+}
+
+.menuBar span {
+  padding: 2px 8px;
+  cursor: default;
+}
+
+.menuBar span:hover {
+  background: #0a246a;
+  color: #fff;
+}
+
+.content {
+  padding: 8px;
+  background: #d4d0c8;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
