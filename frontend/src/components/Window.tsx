@@ -6,6 +6,8 @@ type WindowProps = {
   children: React.ReactNode
   initialX: number
   initialY: number
+  zIndex?: number
+  onFocus?: () => void
 }
 
 type ResizeEdge = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
@@ -15,7 +17,7 @@ const SPRING   = 0.07
 const DAMPING  = 0.85
 const MAX_ANGLE = 10
 
-function Window({ title, children, initialX, initialY }: WindowProps) {
+function Window({ title, children, initialX, initialY, zIndex = 10, onFocus }: WindowProps) {
   const [position, setPosition] = useState({ x: initialX, y: initialY })
   const [size, setSize] = useState({ width: 340, height: 300 })
   const [minimized, setMinimized] = useState(false)
@@ -160,9 +162,10 @@ function Window({ title, children, initialX, initialY }: WindowProps) {
     <div
       className={`${styles.window} ${animClass} ${dragClass} ${maxClass}`}
       style={maximized
-        ? { left: 0, top: 0, width: '100vw', transformOrigin, transform: currentTransform }
-        : { left: position.x, top: position.y, width: size.width, transformOrigin, transform: currentTransform }
+        ? { left: 0, top: 0, width: '100vw', zIndex: zIndex + 100, transformOrigin, transform: currentTransform }
+        : { left: position.x, top: position.y, width: size.width, zIndex, transformOrigin, transform: currentTransform }
       }
+      onMouseDown={onFocus}
       onAnimationEnd={onAnimationEnd}
     >
       <div className={styles.resizeN} onMouseDown={e => onResizeMouseDown(e, 'n')} />
