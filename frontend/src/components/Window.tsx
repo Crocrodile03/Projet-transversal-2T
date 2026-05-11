@@ -9,7 +9,7 @@ type WindowProps = {
 }
 
 type ResizeEdge = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
-type AnimState = 'idle' | 'squishing' | 'stretching'
+type AnimState = 'idle' | 'squishing' | 'stretching' | 'wiggle-max' | 'wiggle-restore'
 
 const SPRING   = 0.07
 const DAMPING  = 0.85
@@ -19,6 +19,8 @@ function Window({ title, children, initialX, initialY }: WindowProps) {
   const [position, setPosition] = useState({ x: initialX, y: initialY })
   const [size, setSize] = useState({ width: 340, height: 300 })
   const [minimized, setMinimized] = useState(false)
+  const [maximized, setMaximized] = useState(false)
+  const prevSizePos = useRef({ position: { x: initialX, y: initialY }, size: { width: 340, height: 300 } })
   const [animState, setAnimState] = useState<AnimState>('idle')
   const [dragging, setDragging] = useState(false)
   const [grabOrigin, setGrabOrigin] = useState({ x: 50, y: 20 })
@@ -56,6 +58,22 @@ function Window({ title, children, initialX, initialY }: WindowProps) {
       rafRef.current = requestAnimationFrame(loop)
     }
     rafRef.current = requestAnimationFrame(loop)
+  }
+
+  function handleMaximize(e: React.MouseEvent) {
+    e.stopPropagation()
+    if (maximized) {
+      setPosition(prevSizePos.current.position)
+      setSize(prevSizePos.current.size)
+      setMaximized(false)
+      setAnimState('wiggle-restore')
+    } else {
+      prevSizePos.current = { position: { ...position }, size: { ...size } }
+      setPosition({ x: 0, y: 0 })
+      setSize({ width: window.innerWidth, height: window.innerHeight })
+      setMaximized(true)
+      setAnimState('wiggle-max')
+    }
   }
 
   function handleMinimize(e: React.MouseEvent) {
@@ -128,15 +146,23 @@ function Window({ title, children, initialX, initialY }: WindowProps) {
     window.addEventListener('mouseup', onMouseUp)
   }
 
-  const animClass      = animState === 'squishing' ? styles.squish : animState === 'stretching' ? styles.stretch : ''
+  const animClass = animState === 'squishing'      ? styles.squish
+                  : animState === 'stretching'     ? styles.stretch
+                  : animState === 'wiggle-max'     ? styles.wiggleMax
+                  : animState === 'wiggle-restore' ? styles.wiggleRestore
+                  : ''
   const dragClass      = dragging ? styles.grabbed : ''
-  const transformOrigin = `${grabOrigin.x}% ${grabOrigin.y}px`
-  const currentTransform = `scale(${dragging ? 1.03 : 1}) rotate(${rotation}deg)`
+  const maxClass       = maximized ? styles.maximized : ''
+  const transformOrigin = maximized ? 'center center' : `${grabOrigin.x}% ${grabOrigin.y}px`
+  const currentTransform = maximized ? 'none' : `scale(${dragging ? 1.03 : 1}) rotate(${rotation}deg)`
 
   return (
     <div
-      className={`${styles.window} ${animClass} ${dragClass}`}
-      style={{ left: position.x, top: position.y, width: size.width, transformOrigin, transform: currentTransform }}
+      className={`${styles.window} ${animClass} ${dragClass} ${maxClass}`}
+      style={maximized
+        ? { left: 0, top: 0, width: '100vw', transformOrigin, transform: currentTransform }
+        : { left: position.x, top: position.y, width: size.width, transformOrigin, transform: currentTransform }
+      }
       onAnimationEnd={onAnimationEnd}
     >
       <div className={styles.resizeN} onMouseDown={e => onResizeMouseDown(e, 'n')} />
@@ -144,12 +170,12 @@ function Window({ title, children, initialX, initialY }: WindowProps) {
         <span className={styles.titleText}>{title}</span>
         <div className={styles.winButtons}>
           <button className={styles.minimize} onMouseDown={e => e.stopPropagation()} onClick={handleMinimize}>_</button>
-          <button className={styles.maximize} onMouseDown={e => e.stopPropagation()}>&#9633;</button>
+          <button className={styles.maximize} onMouseDown={e => e.stopPropagation()} onClick={handleMaximize}>{maximized ? '❐' : '◻'}</button>
           <button className={styles.close} onMouseDown={e => e.stopPropagation()}>&#x2715;</button>
         </div>
       </div>
       {!minimized && (
-        <div className={styles.content} style={{ height: size.height - 28, overflow: 'auto' }}>
+        <div className={styles.content} style={{ height: maximized ? window.innerHeight - 28 : size.height - 28, overflow: 'auto' }}>
           {children}
         </div>
       )}

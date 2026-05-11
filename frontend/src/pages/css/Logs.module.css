@@ -63,3 +63,38 @@
   color: #ccc;
 }
 
+/* ── En-têtes de colonnes triables ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px;
+  background: #d4d0c8;
+  border-bottom: 1px solid #a0a0a0;
+}
+
+.colBtn {
+  font-family: Tahoma, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  background: linear-gradient(to bottom, #e8e4dc, #c8c4bc);
+  border: 1px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  padding: 2px 8px;
+  cursor: pointer;
+  flex: 1;
+  text-align: left;
+}
+
+.colBtn:hover {
+  background: linear-gradient(to bottom, #f0ece4, #d8d4cc);
+}
+
+.colBtn:active {
+  background: linear-gradient(to bottom, #c8c4bc, #e8e4dc);
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+

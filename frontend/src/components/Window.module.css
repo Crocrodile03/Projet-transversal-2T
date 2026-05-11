@@ -1,5 +1,6 @@
 .window {
   position: fixed;
+  z-index: 10;
   background: #d4d0c8;
   border: 2px solid #808080;
   border-top-color: #fff;
@@ -85,6 +86,40 @@
 .resizeNW { top: -4px;    left: -4px;   width: 12px;  height: 12px; cursor: nw-resize; }
 .resizeSE { bottom: -4px; right: -4px;  width: 12px;  height: 12px; cursor: se-resize; }
 .resizeSW { bottom: -4px; left: -4px;   width: 12px;  height: 12px; cursor: sw-resize; }
+
+.maximized {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* ── Wiggle maximize / restore ── */
+@keyframes wiggle-max {
+  0%   { transform: scale(1); }
+  20%  { transform: scale(1.03, 0.95); }
+  40%  { transform: scale(0.97, 1.04); }
+  60%  { transform: scale(1.02, 0.98); }
+  80%  { transform: scale(0.99, 1.01); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wiggle-restore {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(0.95, 1.06) rotate(-1deg); }
+  50%  { transform: scale(1.04, 0.96) rotate(1deg); }
+  75%  { transform: scale(0.98, 1.02) rotate(-0.5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.wiggleMax {
+  animation: wiggle-max 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  transform-origin: center center;
+}
+
+.wiggleRestore {
+  animation: wiggle-restore 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  transform-origin: top left;
+}
 
 /* ── Squash & Stretch ── */
 @keyframes squish {
