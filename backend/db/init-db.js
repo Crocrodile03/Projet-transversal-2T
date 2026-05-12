@@ -11,3 +11,5 @@ db.prepare(`
 
 console.log("Base de données et table User créées avec succès !");
 db.close();
+
+// node init-db.js pour initialiser la db
