@@ -12,7 +12,7 @@ export let historiqueCapteurs: Mesure[] = [];
 
 // Fonction pour initialiser la connexion
 export const initMqtt = () => {
-  const MQTT_BROKER = 'mqtt://10.1.100.143:1883';
+  const MQTT_BROKER = 'mqtt://172.20.10.2:1883';
   console.log(`Tentative de connexion au broker MQTT : ${MQTT_BROKER}`);
   const mqttClient = mqtt.connect(MQTT_BROKER);
 
