@@ -4,7 +4,7 @@ from machine import Pin, time_pulse_us
 from umqtt.simple import MQTTClient
 
 # --- CONFIG ---
-MQTT_BROKER = "10.1.100.143" 
+MQTT_BROKER = "10.66.116.44" 
 CLIENT_ID = "Pico_Timothee"
 
 led = Pin(0, Pin.OUT)
@@ -15,7 +15,7 @@ echo = Pin(15, Pin.IN)
 # --- CONNEXION WIFI ---
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect("Linksys08470", "scqx3iiphv")
+wlan.connect("0001", "00000001")
 
 print("Attente WiFi...")
 while not wlan.isconnected(): 
@@ -72,7 +72,7 @@ while True:
             print("Ping vers le PC...")
             import os
 # Remplace par l'IP de ton PC actuelle
-            os.system("ping -c 1 10.1.100.143")
+            os.system("ping -c 1 10.66.116.44")
             client.connect()
         except:
             pass

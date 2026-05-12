@@ -4,7 +4,7 @@ from machine import Pin, time_pulse_us
 from umqtt.simple import MQTTClient
 
 # --- CONFIG ---
-MQTT_BROKER = "10.1.100.143" 
+MQTT_BROKER = "172.20.10.2" 
 CLIENT_ID = "Pico_Timothee"
 
 led = Pin(0, Pin.OUT)
@@ -26,7 +26,7 @@ def reception_message(topic, msg):
 # --- CONNEXION WIFI ---
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect("Linksys08470", "scqx3iiphv")
+wlan.connect("Iphone 16e", "jesaispas")
 
 print("Attente WiFi...")
 while not wlan.isconnected(): 
