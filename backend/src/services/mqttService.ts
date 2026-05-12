@@ -9,12 +9,13 @@ export interface Mesure {
 
 // Notre tableau temporaire (qu'on exporte pour pouvoir le lire ailleurs)
 export let historiqueCapteurs: Mesure[] = [];
-
+const MQTT_BROKER = 'mqtt://172.20.10.2:1883';
+export const mqttClient = mqtt.connect(MQTT_BROKER);
 // Fonction pour initialiser la connexion
 export const initMqtt = () => {
-  const MQTT_BROKER = 'mqtt://172.20.10.2:1883';
+  
   console.log(`Tentative de connexion au broker MQTT : ${MQTT_BROKER}`);
-  const mqttClient = mqtt.connect(MQTT_BROKER);
+  
 
   mqttClient.on('connect', () => {
     console.log('✅ Service MQTT connecté avec succès !');
@@ -42,3 +43,4 @@ export const initMqtt = () => {
     console.error('❌ Erreur MQTT :', err);
   });
 };
+

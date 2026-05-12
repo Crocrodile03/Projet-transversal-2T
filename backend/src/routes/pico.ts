@@ -1,12 +1,25 @@
 import { Router, Request, Response } from "express";
 import { historiqueCapteurs } from "../services/mqttService";
+import { mqttClient } from "../services/mqttService";
 
 const router = Router()
 
 router.get('/pico/data', (_req: Request, res: Response) => {
   res.json(historiqueCapteurs)
 })
+router.post('/pico-led', (req: Request, res: Response) => {
+  const { led } = req.body
 
+  if (typeof led !== 'boolean') {
+    return res.status(400).json({ error: 'Le champ led doit être true ou false' })
+  }
+
+  const message = led ? 'on' : 'off'
+  mqttClient.publish('pico/led', message)
+  console.log(`Commande LED envoyée au Pico : ${message}`)
+
+  res.json({ led, message })
+})
 router.post('/pico-data', (req: Request, res: Response) => {
   const picoData = req.body
   console.log('Données reçues du Pico :', picoData)
