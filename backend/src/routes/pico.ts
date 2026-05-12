@@ -14,7 +14,7 @@ router.post('/pico-led', (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Le champ led doit être true ou false' })
   }
 
-  const message = led ? 'on' : 'off'
+  const message = led ? 'ON' : 'OFF'
   mqttClient.publish('pico/led', message)
   console.log(`Commande LED envoyée au Pico : ${message}`)
 

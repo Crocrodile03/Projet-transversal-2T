@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import vache from '../assets/images/vache.png'
 import styles from './Cow.module.css'
 
@@ -12,10 +12,7 @@ const MAX_SIZE           = 55   // largeur (px) des vaches en haut
 const MIN_DURATION       = 7    // secondes pour traverser (bas, rapides)
 const MAX_DURATION       = 22   // secondes pour traverser (haut, lentes)
 
-const SPAWN_TICK_MS      = 500   // intervalle entre chaque tentative (millisecondes)
-const SPAWN_CHANCE_PCT   = 15    // % de chance de spawner à chaque tick (0-100)
-
-const MAX_COWS           = 6    // nombre max de vaches simultanées
+const MAX_COWS           = 500    // nombre max de vaches simultanées
 // ──────────────────────────────────────────────────────────────────────
 
 interface CowInstance {
@@ -43,19 +40,32 @@ function makeCow(): CowInstance {
 
 function Cow() {
   const [cows, setCows] = useState<CowInstance[]>([])
+  const lastHeure = useRef<string | null>(null)
+  const initialized = useRef(false)
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>
-
-    function spawnAndSchedule() {
-      if (Math.random() * 100 < SPAWN_CHANCE_PCT) {
-        setCows(prev => prev.length >= MAX_COWS ? prev : [...prev, makeCow()])
-      }
-      timeoutId = setTimeout(spawnAndSchedule, SPAWN_TICK_MS)
+    const fetchData = async () => {
+      try {
+        const res = await fetch('http://localhost:54333/api/pico/data')
+        if (!res.ok) return
+        const data: { topic: string; heure: string }[] = await res.json()
+        const distances = data.filter(m => m.topic === 'pico/distance')
+        if (distances.length === 0) return
+        const newest = distances[0].heure
+        if (!initialized.current) {
+          lastHeure.current = newest
+          initialized.current = true
+          return
+        }
+        if (newest !== lastHeure.current) {
+          lastHeure.current = newest
+          setCows(prev => prev.length < MAX_COWS ? [...prev, makeCow()] : prev)
+        }
+      } catch {}
     }
-
-    spawnAndSchedule()
-    return () => clearTimeout(timeoutId)
+    fetchData()
+    const interval = setInterval(fetchData, 2000)
+    return () => clearInterval(interval)
   }, [])
 
   return (
