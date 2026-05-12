@@ -1,19 +1,11 @@
 import { Router, Request, Response } from "express";
+import { historiqueCapteurs } from "../services/mqttService";
 
 const router = Router()
 
-router.get('/pico-flask', async (_req: Request, res: Response) => {
-  try {
-    const response = await fetch('http://localhost:5000/api/data')
-    const data = await response.json()
-    res.json(data)
-  } catch (error) {
-    console.error('Erreur fetch Flask :', error)
-    res.status(502).json({ error: 'Impossible de récupérer les données du service Flask' })
-  }
+router.get('/pico/data', (_req: Request, res: Response) => {
+  res.json(historiqueCapteurs)
 })
-
-
 
 router.post('/pico-data', (req: Request, res: Response) => {
   const picoData = req.body

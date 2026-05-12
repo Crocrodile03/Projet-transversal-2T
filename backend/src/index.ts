@@ -2,10 +2,12 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import routes from './routes/index'
-import './services/mqttService'
+import { initMqtt } from './services/mqttService'
 
 const app = express()
 const PORT = 54333
+
+initMqtt()
 
 app.use(cors())
 app.use(express.json())

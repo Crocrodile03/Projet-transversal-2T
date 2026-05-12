@@ -1,22 +1,44 @@
-import mqtt from 'mqtt'
+import mqtt from 'mqtt';
 
-const brokerUrl = 'mqtt://10.1.100.143:1883'
-const subscribedTopics = ['pico/distance', 'pico/bouton']
+// On définit le type de nos données
+export interface Mesure {
+  topic: string;
+  valeur: string;
+  heure: string;
+}
 
-const mqttClient = mqtt.connect(brokerUrl)
+// Notre tableau temporaire (qu'on exporte pour pouvoir le lire ailleurs)
+export let historiqueCapteurs: Mesure[] = [];
 
-mqttClient.on('connect', () => {
-  subscribedTopics.forEach(topic => mqttClient.subscribe(topic))
-  console.log(`MQTT connecté à ${brokerUrl}`)
-})
+// Fonction pour initialiser la connexion
+export const initMqtt = () => {
+  const MQTT_BROKER = 'mqtt://172.20.10.2:1883';
+  console.log(`Tentative de connexion au broker MQTT : ${MQTT_BROKER}`);
+  const mqttClient = mqtt.connect(MQTT_BROKER);
 
-mqttClient.on('message', (topic, message) => {
-  const payload = message.toString()
-  console.log(`[MQTT] ${topic} : ${payload}`)
-})
+  mqttClient.on('connect', () => {
+    console.log('✅ Service MQTT connecté avec succès !');
+    mqttClient.subscribe('pico/distance');
+    mqttClient.subscribe('pico/bouton');
+  });
 
-mqttClient.on('error', (error) => {
-  console.error('[MQTT] Erreur :', error)
-})
+  mqttClient.on('message', (topic, message) => {
+    const valeur = message.toString();
+    console.log(`[MQTT] Message reçu - ${topic} : ${valeur}`);
+    
+    const nouvelleDonnee: Mesure = {
+      topic: topic,
+      valeur: valeur,
+      heure: new Date().toLocaleTimeString()
+    };
 
-export default mqttClient
+    historiqueCapteurs.unshift(nouvelleDonnee);
+    if (historiqueCapteurs.length > 20) {
+      historiqueCapteurs.pop();
+    }
+  });
+
+  mqttClient.on('error', (err) => {
+    console.error('❌ Erreur MQTT :', err);
+  });
+};
