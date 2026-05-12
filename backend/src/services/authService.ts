@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from '../models/User';
 import * as argon2 from 'argon2';
 
 export class AuthService {

@@ -5,7 +5,7 @@ import routes from './routes/index'
 // import mongoose from './db.js' // Uncomment when ready to connect to MongoDB
 
 const app = express()
-const PORT = 3000
+const PORT = 54333
 
 app.use(cors())
 app.use(express.json())
