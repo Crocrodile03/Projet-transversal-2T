@@ -1,8 +1,11 @@
 import { Router, Request, Response } from "express";
+import { historiqueCapteurs } from "../services/mqttService";
 
 const router = Router()
 
-
+router.get('/pico/data', (_req: Request, res: Response) => {
+  res.json(historiqueCapteurs)
+})
 
 router.post('/pico-data', (req: Request, res: Response) => {
   const picoData = req.body
