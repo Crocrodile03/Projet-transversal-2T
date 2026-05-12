@@ -4,8 +4,8 @@ import time
 from machine import Pin, time_pulse_us
 
 # --- CONFIGURATION ---
-SSID = "0001"
-PASSWORD = "00000001"
+SSID = "Linksys08470"
+PASSWORD = "scqx3iiphv"
 
 led = Pin(0, Pin.OUT)
 button = Pin(1, Pin.IN, Pin.PULL_UP)
