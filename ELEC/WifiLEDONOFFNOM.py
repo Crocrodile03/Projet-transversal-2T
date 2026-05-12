@@ -4,24 +4,26 @@ from machine import Pin, time_pulse_us
 from umqtt.simple import MQTTClient
 
 # --- CONFIG ---
-MQTT_BROKER = "172.20.10.2"  # <-- Espace invisible supprimé à la fin
+MQTT_BROKER = "172.20.10.2"
 CLIENT_ID = "Pico_Timothee"
-NOM_SYSTEME = "Radar_Timothee"  # <-- Ta nouvelle variable pour le nom
+NOM_SYSTEME = "NOM" 
 
 led = Pin(0, Pin.OUT)
 button = Pin(1, Pin.IN, Pin.PULL_UP)
 trig = Pin(14, Pin.OUT)
 echo = Pin(15, Pin.IN)
 
+# Variable pour stocker la mesure précédente
+derniere_dist = 0
+
 # --- FONCTION CALLBACK MQTT ---
 def reception_message(topic, msg):
     print("Message reçu sur {}: {}".format(topic, msg))
-    
     if msg == b"ON":
-        led.value(1)  # Allume la LED (Active le système)
+        led.value(1)
         print("Système ACTIVÉ")
     elif msg == b"OFF":
-        led.value(0)  # Eteint la LED (Désactive le système)
+        led.value(0)
         print("Système DÉSACTIVÉ")
 
 # --- CONNEXION WIFI ---
@@ -51,7 +53,6 @@ try:
     client.connect()
     print("Connecté au Broker MQTT !")
     client.subscribe("pico/led")
-    print("Abonné au topic : pico/led")
 except:
     reconnect()
 
@@ -64,30 +65,37 @@ def get_distance():
     duree = time_pulse_us(echo, 1, 30000)
     return round((duree * 0.0343) / 2, 1) if duree > 0 else 0
 
-print("Envoi des donnees vers Mosquitto...")
+print("Envoi des donnees si variation > 8cm...")
 
 while True:
     try:
-        # 1. On écoute toujours les messages entrants pour pouvoir allumer/éteindre
         client.check_msg()
         
-        # 2. Le système n'envoie les données QUE si la LED est allumée
         if led.value() == 1:
-            valeur_bouton = button.value()
-            dist = get_distance()
+            actuelle_dist = get_distance()
             
-            # On intègre le nom du système dans le message envoyé au PC
-            message_distance = "{} : {}".format(NOM_SYSTEME, dist)
+            # Calcul de la différence absolue
+            # On utilise la formule : $$\Delta d = |d_{actuelle} - d_{precedente}|$$
+            difference = abs(actuelle_dist - derniere_dist)
             
-            client.publish("pico/distance", message_distance)
-            client.publish("pico/bouton", "APPUYE" if valeur_bouton == 0 else "RELACHE")
+            if actuelle_dist > 0 and difference > 8:
+                valeur_bouton = button.value()
+                message = "{} : Ecart de {}cm (Dist: {}cm)".format(NOM_SYSTEME, difference, actuelle_dist)
+                
+                client.publish("pico/distance", message)
+                client.publish("pico/bouton", "APPUYE" if valeur_bouton == 0 else "RELACHE")
+                
+                print("Envoi MQTT :", message)
+                
+                # On met à jour la référence pour la prochaine comparaison
+                derniere_dist = actuelle_dist
         
     except Exception as e:
-        print("Erreur détectée, reconnexion en cours...")
+        print("Erreur détectée, reconnexion...")
         try:
             client.connect()
             client.subscribe("pico/led")
         except:
             pass
             
-    time.sleep(3)
+    time.sleep(1)
