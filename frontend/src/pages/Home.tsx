@@ -8,6 +8,15 @@ import Logs from './Logs'
 const WINDOWS = ['logs', 'dispositifs'] as const
 type WinId = typeof WINDOWS[number]
 
+const toggleLedAll = async () => {
+  await fetch('http://localhost:54333/api/pico-led', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ led: true }),
+  })
+  window.dispatchEvent(new Event('demarrer'))
+}
+
 function Home() {
   const [order, setOrder] = useState<WinId[]>(['logs', 'dispositifs'])
 
@@ -22,7 +31,7 @@ function Home() {
   return (
     <>
       <Cow />
-      <Header />
+      <Header onDemarrer={toggleLedAll} />
       <Window title="📋 Logs — Groupe A" initialX={60} initialY={60} zIndex={zOf('logs')} onFocus={() => focus('logs')}>
         <Logs />
       </Window>

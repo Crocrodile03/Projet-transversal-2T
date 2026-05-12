@@ -1,9 +1,13 @@
 import styles from './Header.module.css'
 
-function Header() {
+interface HeaderProps {
+  onDemarrer?: () => void
+}
+
+function Header({ onDemarrer }: HeaderProps) {
   return (
     <div className={styles.taskbar}>
-      <button className={styles.startBtn}>
+      <button className={styles.startBtn} onClick={onDemarrer}>
         <span className={styles.startBlink}>⬤</span>
         Démarrer
       </button>

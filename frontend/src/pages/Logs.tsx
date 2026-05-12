@@ -7,11 +7,21 @@ interface Mesure {
   heure: string
 }
 
-type SortKey = "valeur" | "heure"
+interface DeviceLog {
+  nom: string
+  etat: boolean
+  heure: string
+}
+
+type LogEntry =
+  | { type: 'mouvement'; label: string; heure: string }
+  | { type: 'dispositif'; label: string; etat: boolean; heure: string }
+
+type SortKey = "label" | "heure"
 type SortDir = "asc" | "desc"
 
 function Logs() {
-  const [mesures, setMesures] = useState<Mesure[]>([])
+  const [entries, setEntries] = useState<LogEntry[]>([])
   const [sortKey, setSortKey] = useState<SortKey>("heure")
   const [sortDir, setSortDir] = useState<SortDir>("desc")
 
@@ -26,7 +36,15 @@ function Logs() {
     const fetchData = async () => {
       try {
         const res = await fetch('http://localhost:54333/api/pico/data')
-        if (res.ok) setMesures((await res.json()).filter((m: Mesure) => m.topic === 'pico/distance'))
+        const mesures: Mesure[] = res.ok ? await res.json() : []
+        const mouvements: LogEntry[] = mesures
+          .filter(m => m.topic === 'pico/distance')
+          .map(m => ({ type: 'mouvement', label: m.valeur.split(':')[0].trim(), heure: m.heure }))
+        const deviceLogs: DeviceLog[] = JSON.parse(localStorage.getItem('dispositifs-logs') ?? '[]')
+        const cleanLogs = deviceLogs.filter(l => !/AM|PM/i.test(l.heure))
+        localStorage.setItem('dispositifs-logs', JSON.stringify(cleanLogs))
+        const dispositifs: LogEntry[] = cleanLogs.map(l => ({ type: 'dispositif', label: l.nom, etat: l.etat, heure: l.heure }))
+        setEntries([...mouvements, ...dispositifs])
       } catch {}
     }
     fetchData()
@@ -34,26 +52,34 @@ function Logs() {
     return () => clearInterval(interval)
   }, [])
 
+  const sorted = [...entries].sort((a, b) => {
+    const cmp = a[sortKey].localeCompare(b[sortKey])
+    return sortDir === "asc" ? cmp : -cmp
+  })
+
   return (
     <div className={styles.page}>
       <div className={styles.title}>📋 Logs</div>
       <div className={styles.header}>
-        <button className={styles.colBtn} onClick={() => handleSort("valeur")}>
-          Radar{arrow("valeur")}
+        <button className={styles.colBtn} onClick={() => handleSort("label")}>
+          Radar{arrow("label")}
         </button>
         <button className={styles.colBtn} onClick={() => handleSort("heure")}>
           Date d'activation{arrow("heure")}
         </button>
       </div>
       <ul className={styles.list}>
-        {[...mesures].sort((a, b) => {
-          const cmp = a[sortKey].localeCompare(b[sortKey])
-          return sortDir === "asc" ? cmp : -cmp
-        }).map((mesure, index) => (
+        {sorted.map((entry, index) => (
           <li key={index} className={styles.item}>
-            <span className={styles.location}>{mesure.valeur.split(':')[0].trim()}</span>
-            <span className={styles.mouvement}>Mouvement détecté ! </span>
-            <span className={styles.date}>{mesure.heure}</span>
+            <span className={styles.location}>{entry.label}</span>
+            {entry.type === 'mouvement' ? (
+              <span className={styles.mouvement}>Mouvement détecté !</span>
+            ) : (
+              <span className={entry.etat ? styles.allume : styles.eteint}>
+                {entry.etat ? '● Allumé' : '● Éteint'}
+              </span>
+            )}
+            <span className={styles.date}>{entry.heure}</span>
           </li>
         ))}
       </ul>

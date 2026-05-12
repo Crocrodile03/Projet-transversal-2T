@@ -84,6 +84,20 @@
   margin-right: 8px;
 }
 
+.allume {
+  color: #16a34a;
+  font-weight: bold;
+  font-size: 10px;
+  margin-right: 8px;
+}
+
+.eteint {
+  color: #dc2626;
+  font-weight: bold;
+  font-size: 10px;
+  margin-right: 8px;
+}
+
 /* ── En-têtes de colonnes triables ── */
 .header {
   display: flex;
