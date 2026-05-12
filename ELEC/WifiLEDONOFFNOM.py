@@ -6,7 +6,7 @@ from umqtt.simple import MQTTClient
 # --- CONFIG ---
 MQTT_BROKER = "172.20.10.2"
 CLIENT_ID = "Pico_Timothee"
-NOM_SYSTEME = "NOM" 
+NOM_SYSTEME = "Radar cuisine" 
 
 led = Pin(0, Pin.OUT)
 button = Pin(1, Pin.IN, Pin.PULL_UP)
