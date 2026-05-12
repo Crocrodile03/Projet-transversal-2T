@@ -1,0 +1,43 @@
+.cow {
+  position: fixed;
+  image-rendering: pixelated;
+  animation: linear forwards;
+}
+
+/* droite → gauche */
+.rtl {
+  animation-name: walk-rtl;
+}
+
+.rtl .img {
+  transform: scaleX(-1);
+}
+
+/* gauche → droite */
+.ltr {
+  animation-name: walk-ltr;
+}
+
+@keyframes walk-rtl {
+  from { left: 110vw; }
+  to   { left: -300px; }
+}
+
+@keyframes walk-ltr {
+  from { left: -300px; }
+  to   { left: 110vw; }
+}
+
+/* wiggle sur l'image */
+.img {
+  display: block;
+  width: 100%;
+  animation: wiggle 0.4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes wiggle {
+  0%   { rotate: calc(-1 * var(--wiggle-angle)); }
+  50%  { rotate: var(--wiggle-angle); }
+  100% { rotate: calc(-1 * var(--wiggle-angle)); }
+}

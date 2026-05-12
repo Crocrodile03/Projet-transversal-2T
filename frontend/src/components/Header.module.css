@@ -1,0 +1,78 @@
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: linear-gradient(to bottom, #1f5cbf 0%, #3a7fd4 8%, #2060c8 50%, #1a50b0 95%, #0a3080 100%);
+  border-top: 2px solid #5a9ae0;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  gap: 4px;
+  z-index: 1000;
+}
+
+.startBtn {
+  height: 28px;
+  padding: 0 12px;
+  background: linear-gradient(to bottom, #5ab030 0%, #3e8c20 50%, #2a6e10 100%);
+  border: 1px solid #1a5008;
+  border-radius: 12px;
+  color: #fff;
+  font-family: Tahoma, sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 6px #00aa0088;
+}
+
+.startBlink {
+  color: #ff4444;
+  font-size: 8px;
+  animation: blink 1s step-start infinite;
+}
+
+.separator {
+  width: 1px;
+  height: 24px;
+  background: #1a4090;
+  border-right: 1px solid #5a8ad0;
+  margin: 0 4px;
+}
+
+.appBtn {
+  height: 26px;
+  padding: 0 10px;
+  background: linear-gradient(to bottom, #3a70c8, #2558b0);
+  border: 1px solid #1a4090;
+  border-top-color: #5a8ad0;
+  color: #fff;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  box-shadow: inset 0 1px 0 #4a80d8;
+}
+
+.tray {
+  margin-left: auto;
+  background: linear-gradient(to bottom, #1a50a8, #2060c0);
+  border: 1px solid #1a4090;
+  border-top-color: #4a70c0;
+  height: 26px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 11px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

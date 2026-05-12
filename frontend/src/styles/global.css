@@ -1,0 +1,29 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Tahoma, 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  color: #000;
+  min-height: 100vh;
+  background: url('/src/assets/images/fond.png') center center / cover no-repeat fixed;
+}
+
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: #d4d0c8;
+  border-left: 1px solid #a0a0a0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #e8e4dc, #d4d0c8);
+  border: 1px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+}

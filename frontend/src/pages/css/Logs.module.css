@@ -1,0 +1,100 @@
+.page {
+  background: #d4d0c8;
+  border: 2px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+}
+
+.title {
+  background: linear-gradient(to right, #0a246a, #3a6be0);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 6px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  max-height: 320px;
+  overflow-y: auto;
+  background: #fff;
+  border: 2px inset #a0a0a0;
+  margin: 6px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 8px;
+  font-size: 11px;
+  border-bottom: 1px solid #e8e4dc;
+  cursor: default;
+}
+
+.item:nth-child(odd) {
+  background: #fff;
+}
+
+.item:nth-child(even) {
+  background: #f0f0f8;
+}
+
+.item:hover {
+  background: #0a246a;
+  color: #fff;
+}
+
+.location {
+  font-weight: bold;
+}
+
+.date {
+  color: #444;
+  font-size: 10px;
+}
+
+.item:hover .date {
+  color: #ccc;
+}
+
+/* ── En-têtes de colonnes triables ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px;
+  background: #d4d0c8;
+  border-bottom: 1px solid #a0a0a0;
+}
+
+.colBtn {
+  font-family: Tahoma, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  background: linear-gradient(to bottom, #e8e4dc, #c8c4bc);
+  border: 1px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  padding: 2px 8px;
+  cursor: pointer;
+  flex: 1;
+  text-align: left;
+}
+
+.colBtn:hover {
+  background: linear-gradient(to bottom, #f0ece4, #d8d4cc);
+}
+
+.colBtn:active {
+  background: linear-gradient(to bottom, #c8c4bc, #e8e4dc);
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
