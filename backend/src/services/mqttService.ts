@@ -1,4 +1,5 @@
 import mqtt from 'mqtt';
+import MesureModel from '../models/Mesure';
 
 // On définit le type de nos données
 export interface Mesure {
@@ -37,6 +38,9 @@ export const initMqtt = () => {
     if (historiqueCapteurs.length > 20) {
       historiqueCapteurs.pop();
     }
+
+    // Persistance en base de données
+    new MesureModel(nouvelleDonnee).save();
   });
 
   mqttClient.on('error', (err) => {

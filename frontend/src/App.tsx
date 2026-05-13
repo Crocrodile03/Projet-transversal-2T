@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import Home from './pages/Home';
-import DashboardPico from './pages/dashboardPico';
+import DashboardPico from './pages/DashboardPico';
 import Login from './pages/Login';
 import Register from './pages/Register';
 

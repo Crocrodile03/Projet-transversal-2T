@@ -12,6 +12,7 @@ declare module 'better-sqlite3' {
   interface Statement {
     run(...params: any[]): RunResult;
     get(...params: any[]): any;
+    all(...params: any[]): any[];
   }
 
   export default class Database {
