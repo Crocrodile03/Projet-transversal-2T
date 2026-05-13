@@ -22,4 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+#database files
+*.db
+.env
 backend/.env
