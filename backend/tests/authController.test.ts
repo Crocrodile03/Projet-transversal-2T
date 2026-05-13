@@ -18,6 +18,8 @@ describe("Auth Controller", () => {
       // mockReturnThis permet de faire chainage comme res.status(200).json()
       status: jest.fn().mockReturnThis(), 
       json: jest.fn(),
+      cookie: jest.fn().mockReturnThis(),
+      clearCookie: jest.fn().mockReturnThis(),
     };
     // On remet les compteurs à zéro entre chaque test
     jest.clearAllMocks();
@@ -36,17 +38,17 @@ describe("Auth Controller", () => {
 
     it("devrait retourner 200 et l'utilisateur en cas de succès", async () => {
       mockReq.body = { username: "Crocrodile", password: "mdp" };
-      const fauxUser = { username: "Crocrodile", role: "admin" };
-
-      // On force la fausse fonction login du service à réussir
+      
+      // On s'attend à ce que le service crée un token
+      const fauxUser = { accessToken: "un-faux-token-jwt" }; 
       (AuthService.prototype.login as jest.Mock).mockResolvedValue(fauxUser);
 
       await login(mockReq as Request, mockRes as Response);
 
-      expect(mockRes.json).toHaveBeenCalledWith(fauxUser);
-      // Express renvoie 200 par défaut quand on fait res.json(), donc on ne teste pas le status
+      // On vérifie que le contrôleur a bien renvoyé ce token !
+      expect(mockRes.json).toHaveBeenCalledWith({ accessToken: "un-faux-token-jwt" });
     });
-
+    
     it("devrait retourner 401 si les identifiants sont mauvais", async () => {
       mockReq.body = { username: "Crocrodile", password: "mauvaismdp" };
 
