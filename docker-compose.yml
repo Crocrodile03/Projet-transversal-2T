@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: .
+      target: backend
+    volumes:
+      - db-data:/app/db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      target: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db-data:
