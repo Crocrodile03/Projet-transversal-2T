@@ -35,7 +35,7 @@ function Logs() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:54333/api/pico/data')
+        const res = await fetch('/api/pico/data')
         const mesures: Mesure[] = res.ok ? await res.json() : []
         const mouvements: LogEntry[] = mesures
           .filter(m => m.topic === 'pico/distance')

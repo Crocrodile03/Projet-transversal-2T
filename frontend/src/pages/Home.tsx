@@ -9,7 +9,7 @@ const WINDOWS = ['logs', 'dispositifs'] as const
 type WinId = typeof WINDOWS[number]
 
 const toggleLedAll = async () => {
-  await fetch('http://localhost:54333/api/pico-led', {
+  await fetch('/api/pico-led', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ led: true }),

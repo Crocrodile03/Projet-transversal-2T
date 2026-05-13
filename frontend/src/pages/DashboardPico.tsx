@@ -12,7 +12,7 @@ export default function DashboardPico() {
 
   const fetchDonnees = async () => {
     try {
-      const reponse = await fetch('http://localhost:54333/api/pico/data');
+      const reponse = await fetch('/api/pico/data');
       if (reponse.ok) {
         const data = await reponse.json();
         setMesures(data);

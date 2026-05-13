@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Tes imports de pages
 import Home from './pages/Home';
-import DashboardPico from './pages/dashboardPico';
+import DashboardPico from './pages/DashboardPico';
 // Tu pourras ajouter import Logs from './pages/Logs' plus tard !
 
 function App() {
