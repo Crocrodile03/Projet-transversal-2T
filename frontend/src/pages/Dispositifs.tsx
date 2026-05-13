@@ -18,7 +18,11 @@ function Dispositifs() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+<<<<<<< HEAD
+        const res = await fetch('/api/pico/data')
+=======
         const res = await fetch(`${API_URL}/api/pico/data`)
+>>>>>>> origin/main
         if (!res.ok) return
         const data: Mesure[] = await res.json()
         const noms = [...new Set(
@@ -84,7 +88,7 @@ function Dispositifs() {
   }
 
   const toggleLed = async (led: boolean) => {
-    const response = await fetch(`${API_URL}/api/pico-led`, {
+    const response = await fetch('/api/pico-led', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ led }),
