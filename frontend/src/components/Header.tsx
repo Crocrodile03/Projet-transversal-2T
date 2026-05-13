@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import styles from './Header.module.css'
 
 interface HeaderProps {
@@ -5,6 +6,13 @@ interface HeaderProps {
 }
 
 function Header({ onDemarrer }: HeaderProps) {
+  const navigate = useNavigate()
+
+  function logout() {
+    localStorage.removeItem('accessToken')
+    navigate('/login')
+  }
+
   return (
     <div className={styles.taskbar}>
       <button className={styles.startBtn} onClick={onDemarrer}>
@@ -14,6 +22,8 @@ function Header({ onDemarrer }: HeaderProps) {
       <div className={styles.separator} />
       <span className={styles.appBtn}>📹 Console Surveillance</span>
       <div className={styles.tray}>
+        <button className={styles.logoutBtn} onClick={logout}>🔒 Déconnexion</button>
+        <div className={styles.traySep} />
         <span>{new Date().toLocaleTimeString()}</span>
       </div>
     </div>

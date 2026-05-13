@@ -1,0 +1,208 @@
+.desktop {
+  min-height: 100vh;
+  background: url('/src/assets/images/fond.png') center center / cover no-repeat fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Tahoma, 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+}
+
+/* ── Fenêtre XP ── */
+.dialog {
+  background: #d4d0c8;
+  border: 2px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  box-shadow: 4px 4px 0 #000;
+  width: 340px;
+}
+
+.titleBar {
+  background: linear-gradient(to right, #0a246a, #3a6be0);
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titleText {
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.closeBtn {
+  width: 21px;
+  height: 21px;
+  background: linear-gradient(to bottom, #e05050, #b83030);
+  border: 1px solid #808080;
+  border-top-color: #ff8080;
+  border-left-color: #ff8080;
+  color: #fff;
+  font-size: 11px;
+  font-family: Tahoma, sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.closeBtn:hover {
+  background: linear-gradient(to bottom, #ff6060, #d04040);
+}
+
+/* ── Corps de la fenêtre ── */
+.body {
+  padding: 16px;
+}
+
+.iconRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.userIcon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.welcomeTitle {
+  font-size: 13px;
+  font-weight: bold;
+  color: #0a246a;
+  margin-bottom: 2px;
+}
+
+.welcomeSub {
+  font-size: 11px;
+  color: #555;
+}
+
+/* ── Séparateur XP ── */
+.sep {
+  height: 0;
+  border: none;
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #fff;
+  margin: 12px 0;
+}
+
+/* ── Champs ── */
+.field {
+  margin-bottom: 10px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 3px;
+  color: #000;
+}
+
+.input {
+  width: 100%;
+  padding: 3px 5px;
+  font-family: Tahoma, 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  border: 2px solid #808080;
+  border-top-color: #5c5c5c;
+  border-left-color: #5c5c5c;
+  border-bottom-color: #dfdfdf;
+  border-right-color: #dfdfdf;
+  background: #fff;
+  outline: none;
+  color: #000;
+}
+
+.input:focus {
+  border-color: #316ac5;
+}
+
+.inputError {
+  border-color: #cc0000 !important;
+}
+
+.errorMsg {
+  color: #cc0000;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+/* ── Boutons ── */
+.btnRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.btn {
+  padding: 4px 14px;
+  font-family: Tahoma, 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  background: linear-gradient(to bottom, #e8e4dc, #c8c4bc);
+  border: 2px solid #808080;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  cursor: pointer;
+  min-width: 75px;
+  color: #000;
+}
+
+.btn:hover {
+  background: linear-gradient(to bottom, #f0ece4, #d4d0c8);
+}
+
+.btn:active {
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-bottom-color: #fff;
+  border-right-color: #fff;
+  padding: 5px 13px 3px 15px;
+}
+
+.btnPrimary {
+  background: linear-gradient(to bottom, #4a7ef5, #1540b8);
+  color: #fff;
+  border-top-color: #80aaff;
+  border-left-color: #80aaff;
+  border-bottom-color: #0a246a;
+  border-right-color: #0a246a;
+}
+
+.btnPrimary:hover {
+  background: linear-gradient(to bottom, #5a8eff, #2550c8);
+}
+
+.btnPrimary:active {
+  padding: 5px 13px 3px 15px;
+}
+
+/* ── Lien ── */
+.linkRow {
+  margin-top: 10px;
+  text-align: center;
+  color: #555;
+}
+
+.link {
+  color: #0000cc;
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: Tahoma, 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  padding: 0;
+}
+
+.link:hover {
+  color: #cc0000;
+}

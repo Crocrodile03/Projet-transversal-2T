@@ -1,19 +1,22 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// Tes imports de pages
 import Home from './pages/Home';
-import DashboardPico from './pages/DashboardPico';
-// Tu pourras ajouter import Logs from './pages/Logs' plus tard !
+import DashboardPico from './pages/dashboardPico';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
+function PrivateRoute({ element }: { element: React.ReactElement }) {
+  return localStorage.getItem('accessToken') ? element : <Navigate to="/login" replace />;
+}
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* La page d'accueil classique */}
-        <Route path="/" element={<Home />} />
-        
-        {/* Ta nouvelle page IoT */}
-        <Route path="/pico" element={<DashboardPico />} />
+        <Route path="/" element={<PrivateRoute element={<Home />} />} />
+        <Route path="/pico" element={<PrivateRoute element={<DashboardPico />} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );

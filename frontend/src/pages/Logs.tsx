@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import styles from "./css/Logs.module.css"
+import { API_URL } from "../config"
 
 interface Mesure {
   topic: string

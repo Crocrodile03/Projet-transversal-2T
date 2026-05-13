@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Header from '../components/Header'
+import { API_URL } from '../config'
 import Window from '../components/Window'
 import Cow from '../components/Cow'
 import Dispositifs from './Dispositifs'

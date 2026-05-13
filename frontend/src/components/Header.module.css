@@ -68,8 +68,32 @@
   padding: 0 10px;
   display: flex;
   align-items: center;
+  gap: 8px;
   color: #fff;
   font-size: 11px;
+}
+
+.traySep {
+  width: 1px;
+  height: 16px;
+  background: #1a4090;
+  border-right: 1px solid #5a8ad0;
+}
+
+.logoutBtn {
+  height: 20px;
+  padding: 0 8px;
+  background: linear-gradient(to bottom, #c84040, #9a2020);
+  border: 1px solid #6a1010;
+  border-top-color: #e06060;
+  color: #fff;
+  font-family: Tahoma, sans-serif;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  background: linear-gradient(to bottom, #e05050, #b03030);
 }
 
 @keyframes blink {

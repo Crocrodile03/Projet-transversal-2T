@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Dispositif from "../types/dispositif"
+import { API_URL } from "../config"
 import styles from "./css/Dispositifs.module.css"
 
 interface Mesure {
@@ -17,7 +18,11 @@ function Dispositifs() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+<<<<<<< HEAD
         const res = await fetch('/api/pico/data')
+=======
+        const res = await fetch(`${API_URL}/api/pico/data`)
+>>>>>>> origin/main
         if (!res.ok) return
         const data: Mesure[] = await res.json()
         const noms = [...new Set(

@@ -33,8 +33,8 @@ export class AuthService {
         if (!isPasswordValid) {
             throw new Error('Invalid password');
         }
-        const accessToken = this.createAccessToken(user._id.toString(), user.username);
-        const refreshToken = this.createRefreshToken(user._id.toString(), user.username);
+        const accessToken = this.createAccessToken(user.username, user.username);
+        const refreshToken = this.createRefreshToken(user.username, user.username);
         return { accessToken, refreshToken };
     }
 }

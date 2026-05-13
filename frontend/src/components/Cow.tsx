@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import vache from '../assets/images/vache.png'
+import { API_URL } from '../config'
 import styles from './Cow.module.css'
 
 // ── Paramètres modifiables ─────────────────────────────────────────────
@@ -46,7 +47,7 @@ function Cow() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:54333/api/pico/data')
+        const res = await fetch(`${API_URL}/api/pico/data`)
         if (!res.ok) return
         const data: { topic: string; heure: string }[] = await res.json()
         const distances = data.filter(m => m.topic === 'pico/distance')
