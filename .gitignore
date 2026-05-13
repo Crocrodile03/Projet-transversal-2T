@@ -25,3 +25,4 @@ dist-ssr
 #database files
 *.db
 .env
+backend/.env

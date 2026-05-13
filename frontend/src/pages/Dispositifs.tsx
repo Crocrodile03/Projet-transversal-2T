@@ -25,13 +25,11 @@ function Dispositifs() {
             .filter(m => m.topic === 'pico/distance')
             .map(m => m.valeur.split(':')[0].trim())
         )]
-        setDispositifs(prev => {
-          const stateMap = new Map(prev.map(d => [d.getNom(), d.getOn()]))
+        setDispositifs(() => {
           const saved: Record<string, boolean> = JSON.parse(localStorage.getItem('dispositifs-state') ?? '{}')
           return noms.map((nom, i) => {
             const d = new Dispositif(i + 1, nom)
-            if (stateMap.has(nom)) d.setOn(stateMap.get(nom)!)
-            else if (saved[nom] !== undefined) d.setOn(saved[nom])
+            if (saved[nom] !== undefined) d.setOn(saved[nom])
             return d
           })
         })
@@ -40,6 +38,29 @@ function Dispositifs() {
     fetchData()
     const interval = setInterval(fetchData, 2000)
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const handler = () => {
+      const heure = new Date().toLocaleTimeString('fr-BE', { hour12: false })
+      setDispositifs(prev => {
+        const saved: Record<string, boolean> = JSON.parse(localStorage.getItem('dispositifs-state') ?? '{}')
+        const logs: { nom: string; etat: boolean; heure: string }[] = JSON.parse(localStorage.getItem('dispositifs-logs') ?? '[]')
+        const updated = prev.map(d => {
+          if (d.getOn()) return d
+          const u = new Dispositif(d.getId(), d.getNom())
+          u.setOn(true)
+          saved[d.getNom()] = true
+          logs.unshift({ nom: d.getNom(), etat: true, heure })
+          return u
+        })
+        localStorage.setItem('dispositifs-state', JSON.stringify(saved))
+        localStorage.setItem('dispositifs-logs', JSON.stringify(logs.slice(0, 50)))
+        return updated
+      })
+    }
+    window.addEventListener('demarrer', handler)
+    return () => window.removeEventListener('demarrer', handler)
   }, [])
 
   function toggle() {
@@ -52,6 +73,9 @@ function Dispositifs() {
         const saved: Record<string, boolean> = JSON.parse(localStorage.getItem('dispositifs-state') ?? '{}')
         saved[d.getNom()] = updated.getOn()
         localStorage.setItem('dispositifs-state', JSON.stringify(saved))
+        const logs: { nom: string; etat: boolean; heure: string }[] = JSON.parse(localStorage.getItem('dispositifs-logs') ?? '[]')
+        logs.unshift({ nom: d.getNom(), etat: updated.getOn(), heure: new Date().toLocaleTimeString('fr-BE', { hour12: false }) })
+        localStorage.setItem('dispositifs-logs', JSON.stringify(logs.slice(0, 50)))
         toggleLed(updated.getOn())
         return updated
       })

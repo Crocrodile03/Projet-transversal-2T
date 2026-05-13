@@ -30,7 +30,7 @@ export const initMqtt = () => {
     const nouvelleDonnee: Mesure = {
       topic: topic,
       valeur: valeur,
-      heure: new Date().toLocaleTimeString()
+      heure: new Date().toLocaleTimeString('fr-BE', { hour12: false })
     };
 
     historiqueCapteurs.unshift(nouvelleDonnee);
