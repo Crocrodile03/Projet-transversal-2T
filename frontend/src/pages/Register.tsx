@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './css/Auth.module.css'
+import { API_URL } from '../config'
 
 function Register() {
   const navigate = useNavigate()
@@ -26,12 +27,25 @@ function Register() {
     return Object.keys(e).length === 0
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!validate()) return
 
-    // TODO: appel API de création de compte
-    console.log('Register:', { username: form.username })
+    try {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: form.username.trim(), password: form.password }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setErrors({ username: data.error ?? 'Échec de la création du compte.' })
+        return
+      }
+      navigate('/login')
+    } catch {
+      setErrors({ username: 'Impossible de contacter le serveur.' })
+    }
   }
 
   return (

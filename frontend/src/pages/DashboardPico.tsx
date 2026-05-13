@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { API_URL } from '../config';
 
 // Le format des données qu'on attend du backend
 interface Mesure {
@@ -12,7 +13,7 @@ export default function DashboardPico() {
 
   const fetchDonnees = async () => {
     try {
-      const reponse = await fetch('http://localhost:54333/api/pico/data');
+      const reponse = await fetch(`${API_URL}/api/pico/data`);
       if (reponse.ok) {
         const data = await reponse.json();
         setMesures(data);

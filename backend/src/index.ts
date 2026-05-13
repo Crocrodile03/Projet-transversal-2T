@@ -9,7 +9,10 @@ const PORT = 54333
 
 initMqtt()
 
-app.use(cors())
+app.use(cors({
+  origin: /^http:\/\/localhost(:\d+)?$/,
+  credentials: true,
+}))
 app.use(express.json())
 app.use('/api', routes)
 

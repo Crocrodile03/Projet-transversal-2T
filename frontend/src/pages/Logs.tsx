@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import styles from "./css/Logs.module.css"
+import { API_URL } from "../config"
 
 interface Mesure {
   topic: string
@@ -35,7 +36,7 @@ function Logs() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:54333/api/pico/data')
+        const res = await fetch(`${API_URL}/api/pico/data`)
         const mesures: Mesure[] = res.ok ? await res.json() : []
         const mouvements: LogEntry[] = mesures
           .filter(m => m.topic === 'pico/distance')

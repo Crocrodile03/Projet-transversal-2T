@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Header from '../components/Header'
+import { API_URL } from '../config'
 import Window from '../components/Window'
 import Cow from '../components/Cow'
 import Dispositifs from './Dispositifs'
@@ -9,7 +10,7 @@ const WINDOWS = ['logs', 'dispositifs'] as const
 type WinId = typeof WINDOWS[number]
 
 const toggleLedAll = async () => {
-  await fetch('http://localhost:54333/api/pico-led', {
+  await fetch(`${API_URL}/api/pico-led`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ led: true }),

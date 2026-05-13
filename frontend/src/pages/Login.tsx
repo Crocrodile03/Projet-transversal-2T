@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './css/Auth.module.css'
+import { API_URL } from '../config'
 
 function Login() {
   const navigate = useNavigate()
@@ -8,7 +9,7 @@ function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
 
@@ -17,8 +18,22 @@ function Login() {
       return
     }
 
-    // TODO: appel API d'authentification
-    console.log('Login:', { username, password })
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username.trim(), password }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? 'Échec de la connexion.')
+        return
+      }
+      localStorage.setItem('accessToken', data.accessToken)
+      navigate('/')
+    } catch {
+      setError('Impossible de contacter le serveur.')
+    }
   }
 
   return (

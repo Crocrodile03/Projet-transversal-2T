@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Dispositif from "../types/dispositif"
+import { API_URL } from "../config"
 import styles from "./css/Dispositifs.module.css"
 
 interface Mesure {
@@ -17,7 +18,7 @@ function Dispositifs() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:54333/api/pico/data')
+        const res = await fetch(`${API_URL}/api/pico/data`)
         if (!res.ok) return
         const data: Mesure[] = await res.json()
         const noms = [...new Set(
@@ -83,7 +84,7 @@ function Dispositifs() {
   }
 
   const toggleLed = async (led: boolean) => {
-    const response = await fetch('http://localhost:54333/api/pico-led', {
+    const response = await fetch(`${API_URL}/api/pico-led`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ led }),
