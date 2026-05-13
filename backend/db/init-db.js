@@ -6,6 +6,11 @@ db.prepare(`
   CREATE TABLE IF NOT EXISTS User (
     username TEXT NOT NULL PRIMARY KEY UNIQUE,
     password TEXT NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS LOG (
+    nom TEXT NOT NULL PRIMARY KEY UNIQUE,
+    mesure TEXT NOT NULL,
+    etat TEXT NOT NULL
   )
 `).run();
 
